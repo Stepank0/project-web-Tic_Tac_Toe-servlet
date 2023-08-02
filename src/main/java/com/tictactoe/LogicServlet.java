@@ -37,11 +37,35 @@ public class LogicServlet extends HttpServlet {
         // ставим крестик в ячейке, по которой кликнул пользователь
         field.getField().put(index, Sign.CROSS);
 
+        // Проверяем, не победил ли крестик после добавления последнего клика пользователя
+        if (checkWin(resp, currentSession, field)) {
+            return;
+        }
+
         // Получаем пустую ячейку поля
         int emptyFieldIndex = field.getEmptyFieldIndex();
 
+        //AI ставит нолик
         if (emptyFieldIndex >= 0) {
             field.getField().put(emptyFieldIndex, Sign.NOUGHT);
+            // Проверяем, не победил ли нолик после добавление последнего нолика
+            if (checkWin(resp, currentSession, field)) {
+                return;
+            }
+        }// Если пустой ячейки нет и никто не победил - значит это ничья
+        else {
+            // Добавляем в сессию флаг, который сигнализирует что произошла ничья
+            currentSession.setAttribute("draw", true);
+
+            // Считаем список значков
+            List<Sign> data = field.getFieldData();
+
+            // Обновляем этот список в сессии
+            currentSession.setAttribute("data", data);
+
+            // Шлем редирект
+            resp.sendRedirect("/index.jsp");
+            return;
         }
 
         // Считаем список значков

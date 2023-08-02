@@ -1,3 +1,11 @@
+
+.field {
+    width: 300px;
+    border: 1px solid #000;
+    margin: auto;
+}
+
+
 td {
     border: 3px solid black;
     padding: 10px;
